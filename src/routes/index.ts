@@ -1,8 +1,22 @@
-import { Router } from 'express'
-import superheroRouter from './superhero'
+import { Router } from "express";
+import { uniqueEmails } from "../util";
+import { OK } from "http-status-codes";
+const router = Router();
 
-const router = Router()
+interface EmailValidationPostRequest {
+  emails: string[];
+}
 
-router.use('/', superheroRouter)
+interface EmailValidationResponse {
+  uniqueEmails: number;
+}
 
-export default router
+router.post("/email-validation", (req, res) => {
+  const { emails } = req.body as EmailValidationPostRequest;
+  const response: EmailValidationResponse = {
+    uniqueEmails: uniqueEmails(emails),
+  };
+  return res.status(OK).json(response);
+});
+
+export default router;
